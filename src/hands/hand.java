@@ -3,7 +3,6 @@ package hands;
 import java.util.ArrayList;
 
 import Card.Card;
-import setup.profile;
 
 public class hand{
 	public int size;
