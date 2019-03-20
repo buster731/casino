@@ -13,7 +13,7 @@ public class play{
 	public static hand dealerHand = new hand();
 	
 	private static Deck decks;
-
+	// make sure this ^ makes a deck not just includes deck class
 	public static void hit(hand right) {
 		Card c = decks.deal();
 		right.holding.add(c);
