@@ -4,7 +4,11 @@ package Card;
  *
  * <code>Card</code> represents a playing card.
  */
-public class Card {
+interface Comparable{
+	int compareTo(Card next);
+}
+
+public class Card implements Comparable{
 
 	/**
 	 * String value that holds the suit of the card
@@ -20,8 +24,9 @@ public class Card {
 	 * int value that holds the point value.
 	 */
 	private int pointValue;
-
-
+	
+	
+	
    /**
 	 * Creates a new <code>Card</code> instance.
 	 *
@@ -89,5 +94,19 @@ public class Card {
 	@Override
 	public String toString() {
 		return rank + " of " + suit + " (point value = " + pointValue + ")";
+	}
+	
+	@Override
+	public int compareTo(Card next) {
+		int first = this.pointValue;
+		if(first > next.pointValue) {
+			return 1;
+		}
+		else if(first < next.pointValue) {
+			return -1;
+		}
+		else {
+			return 0;
+		}
 	}
 }

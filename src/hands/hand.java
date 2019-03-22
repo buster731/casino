@@ -11,8 +11,8 @@ public class hand{
 	public ArrayList<Card> holding;
 	//make this the constructor, make dealer and player instances of it
 	//public hand()
-	public hand() {
-		this.holding = new ArrayList<Card>();
+	public hand(ArrayList<Card> holding) {
+		this.holding = holding;
 		this.size = holding.size();
 		this.handPoints = handValue();
 	}
@@ -45,5 +45,30 @@ public class hand{
 	public int getHandPoints() {
 		return this.handPoints;
 	}
+	
+	public ArrayList<Card> sortHand() {
+		ArrayList<Card> tempHand = new ArrayList<Card>(this.holding.size());
+		for(Card val : this.holding) {
+			tempHand.add(val);
+		}
+		boolean clean = false;
+		do {
+			clean = true;
+			for(int i = 0; i < tempHand.size() - 1; i++) {
+				if(tempHand.get(i).compareTo(tempHand.get(i + 1)) > 0) {
+					Card temp = tempHand.get(i);
+					tempHand.set(i, tempHand.get(i + 1));
+					tempHand.set(i + 1, temp);
+					clean = false;
+				}
+			}
+		}while(clean != true);
+		for(int j = 0; j < tempHand.size(); j++) {
+			this.holding.set(j, tempHand.get(j));
+		}
+		return this.holding;
+	}
+
+
 	
 }
