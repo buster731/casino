@@ -2,25 +2,44 @@ package Table;
 
 import Card.Card;
 import Deck.Deck;
-import setup.play;
 import setup.profile;
 import hands.*;
 
 
 public class table{
 	
-	public static int chipBet;
+	public int chipBet;
 	public static final String[] ranks = {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
 	public static final String[] suits = {"Clubs", "Spades", "Hearts", "Diamonds"};
 	public static final int[] values = {11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
-	private static Deck decks =  new Deck(ranks, suits, values);
+	public Deck decks;
 	
+	public table(hand playerHand, hand dealerHand) {
+		hand player = playerHand;
+		hand dealer = dealerHand;
+		decks =  new Deck(ranks, suits, values);
+	}
+	public Deck getDeck() {
+		return decks;
+	}
+	public void showTable(hand player, hand dealer) {
+		System.out.println("Player Hand: " );
+		player.sortHand();
+		for(Card held: player.holding) {
+			System.out.print(held.toString());
+		}
+		System.out.println("Player Hand values at: " + player.handValue());
+		System.out.println("Dealer Hand visible: " );
+		dealer.sortHand();
+		Card seen = dealer.holding.get(0);
+		System.out.print(seen.toString());
+		System.out.println("Dealer Hand visible values at: " + seen.pointValue());
+	}
 	
-	
-	
-	public static void hit(hand right) {
+	public void hit(hand right) {
 		Card c = decks.deal();
 		right.holding.add(c);
+		
 		System.out.println("New Card: " + c.rank());
 		System.out.println("Hand: " );
 		right.sortHand();
@@ -30,15 +49,20 @@ public class table{
 		System.out.println("Hand values at: " + right.handValue());
 	}
 	
-	public static void stand(hand dealer) {
+	public void stand(hand stand, hand dealer) {
 		boolean dealerStop = false;
+		System.out.println("Dealer Hand: ");
+		for(Card held : dealer.holding) {
+			System.out.println(held.rank());
+		}
+		System.out.println("Hand values at: " + dealer.handValue());
 		while(dealerStop == false) {
 			dealerStop = checkHand(dealer);
 		}
-		checkHand(play.playerHand, dealer);
+		checkHand(stand, dealer);
 	}
 	
-	public static int checkHand(hand user, hand dealer) {
+	public int checkHand(hand user, hand dealer) {
 		int points = user.handValue();
 		if(points == 21) {
 			//win
@@ -63,7 +87,7 @@ public class table{
 			return push();
 		}
 	}
-	public static boolean checkHand(hand dealer) {
+	public boolean checkHand(hand dealer) {
 		boolean dealerStop = false;
 		if(dealer.handValue() < 17) {
 			hit(dealer);
@@ -74,12 +98,25 @@ public class table{
 		return dealerStop;
 	}
 
-	public static void start(hand person) {
-		hit(person);
-		hit(person);
+	public void start(hand person) {
+		System.out.println(decks.size());
+		
+		for(int i = 0; i < 2; i++) {
+			Card c = decks.deal();
+			System.out.println(c);
+			person.holding.add(c);
+			System.out.println("New Card: " + c.rank());
+			
+		}
+		System.out.println("Hand: " );
+		person.sortHand();
+		for(Card held: person.holding) {
+			System.out.print(held.toString());
+		}
+		System.out.println("Hand values at: " + person.handValue());
 	}
 	
-	public static int win() {
+	public int win() {
 		System.out.println("You win the hand!");
 		int chipWin = chipBet *2;
 		System.out.println("You won " + chipWin + " chips");
@@ -87,12 +124,12 @@ public class table{
 		System.out.println("Your new chip balance is " + profile.getChips() + " chips.");
 		return 0;
 	}
-	public static int lose() {
+	public int lose() {
 		System.out.println("You lose the hand!");
 		System.out.println("Your new chip balance is " + profile.getChips() + " chips.");
 		return 0;
 	}
-	public static int push() {
+	public int push() {
 		System.out.println("You pushed the hand");
 		System.out.println("You keep your bet");
 		profile.setChips(profile.getChips() + chipBet);

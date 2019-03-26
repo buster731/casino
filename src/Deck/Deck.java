@@ -36,9 +36,13 @@ public class Deck extends ArrayList<Card>{
 	 * @param values is an array containing all of the card point values.
 	 */
 	public Deck(String[] ranks, String[] suits, int[] values) {
+		System.out.println("makes deck");
 		for (int j = 0; j < ranks.length; j++) {
+			System.out.println("first for loop" + j + "times");
 			for (String suitString : suits) {
+				System.out.println("second for loop");
 				add(new Card(ranks[j], suitString, values[j]));
+				System.out.println("adds card");
 			}
 		}
 		size = size();
