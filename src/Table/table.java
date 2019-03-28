@@ -19,9 +19,9 @@ public class table{
 		hand dealer = dealerHand;
 		decks =  new Deck(ranks, suits, values);
 	}
-	public Deck getDeck() {
-		return decks;
-	}
+//	public Deck getDeck() {
+//		return decks;
+//	}
 	public void showTable(hand player, hand dealer) {
 		System.out.println("Player Hand: " );
 		player.sortHand();
@@ -44,7 +44,7 @@ public class table{
 		System.out.println("Hand: " );
 		right.sortHand();
 		for(Card held: right.holding) {
-			System.out.print(held.toString());
+			System.out.println(held.toString());
 		}
 		System.out.println("Hand values at: " + right.handValue());
 	}
@@ -63,33 +63,39 @@ public class table{
 	}
 	
 	public int checkHand(hand user, hand dealer) {
-		int points = user.handValue();
+		int points = user.handPoints;
 		if(points == 21) {
 			//win
-			return win();
+			win();
+			return 0;
 		}
 		else if(points > 21) {
 			//bust
-			return lose();
+			lose();
+			return 0;
 		}
 		else if(dealer.handValue() > 21) {
 			//win
-			return win();
+			win();
+			return 0;
 		}
-		else if(points > dealer.handValue()) {
+		else if(points > dealer.handPoints) {
 			//win
-			return win();
+			win();
+			return 0;
 		}
-		else if(dealer.handVal > points) {
-			return lose();
+		else if(dealer.handPoints > points) {
+			lose();
+			return 0;
 		}
 		else {
-			return push();
+			push();
+			return 0;
 		}
 	}
 	public boolean checkHand(hand dealer) {
 		boolean dealerStop = false;
-		if(dealer.handValue() < 17) {
+		if(dealer.handPoints < 17) {
 			hit(dealer);
 		}
 		else {
@@ -97,23 +103,56 @@ public class table{
 		}
 		return dealerStop;
 	}
+	
+	public boolean checkHand(hand player, boolean bust) {
+		int ace = 0;
+		for(Card item : player.holding) {
+			if(item.rank() == "ace") {
+				ace++;
+			}
+		}
+		while(ace > 0 && player.handPoints > 21) {
+			player.handPoints -= 10;
+			ace--;
+		}
+		if(player.handPoints > 21) {
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 
-	public void start(hand person) {
-		System.out.println(decks.size());
-		
+	public void playerStart(hand player) {
+		System.out.println("Player: ");
+
 		for(int i = 0; i < 2; i++) {
 			Card c = decks.deal();
 			System.out.println(c);
-			person.holding.add(c);
+			player.holding.add(c);
 			System.out.println("New Card: " + c.rank());
 			
 		}
-		System.out.println("Hand: " );
-		person.sortHand();
-		for(Card held: person.holding) {
-			System.out.print(held.toString());
+		System.out.println("Player Hand: " );
+		player.sortHand();
+		for(Card held: player.holding) {
+			System.out.println(held.toString());
 		}
-		System.out.println("Hand values at: " + person.handValue());
+		System.out.println("Player Hand values at: " + player.handValue());
+	}
+	
+	public void dealerStart(hand dealer) {
+		System.out.println("Dealer: ");
+		Card c = decks.deal();
+		System.out.println(c);
+		dealer.holding.add(c);
+		System.out.println("New Card: " + c.rank());
+		System.out.println("Dealer Hand: " );
+		dealer.sortHand();
+		for(Card held: dealer.holding) {
+			System.out.println(held.toString());
+		}
+		System.out.println("Dealer Hand values at: " + dealer.handValue());
 	}
 	
 	public int win() {

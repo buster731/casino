@@ -93,7 +93,7 @@ public class Card implements Comparable{
 	 */
 	@Override
 	public String toString() {
-		return rank + " of " + suit + " (point value = " + pointValue + ")";
+		return rank + " of " + suit;
 	}
 	
 	@Override
