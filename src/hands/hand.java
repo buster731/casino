@@ -21,9 +21,8 @@ public class hand{
 		handVal = 0;
 		int ace = 0;
 		for(Card item : holding) {
-			if(item.rank() == "ace") {
+			if(item.rank() == "Ace") {
 				ace++;
-				handVal += 10;
 			}
 			handVal += item.pointValue();
 		}
@@ -69,6 +68,9 @@ public class hand{
 		return this.holding;
 	}
 
+	public void setHandPoints() {
+		this.handPoints = this.handValue();
+	}
 
 	
 }
