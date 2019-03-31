@@ -49,53 +49,57 @@ public class table{
 		System.out.println("Hand values at: " + right.handValue());
 	}
 	
-	public void stand(hand stand, hand dealer) {
+	public void stand(hand stand, hand dealer, long chipBet) {
 		boolean dealerStop = false;
+		System.out.println();
+
 		System.out.println("Dealer Hand: ");
 		for(Card held : dealer.holding) {
 			System.out.println(held.rank());
 		}
+		System.out.println();
+
 		System.out.println("Hand values at: " + dealer.handValue());
 		while(dealerStop == false) {
 			dealerStop = checkHand(dealer);
 		}
-		checkHand(stand, dealer);
+		checkHand(stand, dealer, chipBet);
 	}
 	
-	public int checkHand(hand user, hand dealer) {
-		int points = user.handPoints;
+	public int checkHand(hand user, hand dealer, long chipBet) {
+		int points = user.handValue();
 		if(points == 21) {
 			//win
-			win();
+			win(chipBet);
 			return 0;
 		}
 		else if(points > 21) {
-			//bust
+			//bust		
 			lose();
 			return 0;
 		}
 		else if(dealer.handValue() > 21) {
 			//win
-			win();
+			win(chipBet);
 			return 0;
 		}
-		else if(points > dealer.handPoints) {
+		else if(points > dealer.handValue()) {
 			//win
-			win();
+			win(chipBet);
 			return 0;
 		}
-		else if(dealer.handPoints > points) {
+		else if(dealer.handValue() > points) {
 			lose();
 			return 0;
 		}
 		else {
-			push();
+			push(chipBet);
 			return 0;
 		}
 	}
 	public boolean checkHand(hand dealer) {
 		boolean dealerStop = false;
-		if(dealer.handPoints < 17) {
+		if(dealer.handValue() < 17) {
 			hit(dealer);
 		}
 		else {
@@ -105,27 +109,18 @@ public class table{
 	}
 	
 	public boolean checkHand(hand player, boolean bust) {
-		int ace = 0;
-		for(Card item : player.holding) {
-			if(item.rank() == "ace") {
-				ace++;
-			}
-		}
-		while(ace > 0 && player.handPoints > 21) {
-			player.handPoints -= 10;
-			ace--;
-		}
-		if(player.handPoints > 21) {
-			return true;
+		if(player.handValue() > 21) {
+			bust = true;
 		}
 		else{
-			return false;
+			bust = false;
 		}
+		return bust;
 	}
 
 	public void playerStart(hand player) {
 		System.out.println("Player: ");
-
+		System.out.println();
 		for(int i = 0; i < 2; i++) {
 			Card c = decks.deal();
 			System.out.println(c);
@@ -138,7 +133,11 @@ public class table{
 		for(Card held: player.holding) {
 			System.out.println(held.toString());
 		}
+		System.out.println();
+
 		System.out.println("Player Hand values at: " + player.handValue());
+		System.out.println();
+
 	}
 	
 	public void dealerStart(hand dealer) {
@@ -152,12 +151,17 @@ public class table{
 		for(Card held: dealer.holding) {
 			System.out.println(held.toString());
 		}
-		System.out.println("Dealer Hand values at: " + dealer.handValue());
+		System.out.println("Face Down Card");
+		System.out.println();
+
+		System.out.println("Dealer Hand values at: " + dealer.handValue() + " + ?");
+		System.out.println();
+
 	}
 	
-	public int win() {
+	public int win(long chipBet) {
 		System.out.println("You win the hand!");
-		int chipWin = chipBet *2;
+		long chipWin = chipBet *2;
 		System.out.println("You won " + chipWin + " chips");
 		profile.setChips(profile.getChips() + chipWin);
 		System.out.println("Your new chip balance is " + profile.getChips() + " chips.");
@@ -168,7 +172,7 @@ public class table{
 		System.out.println("Your new chip balance is " + profile.getChips() + " chips.");
 		return 0;
 	}
-	public int push() {
+	public int push(long chipBet) {
 		System.out.println("You pushed the hand");
 		System.out.println("You keep your bet");
 		profile.setChips(profile.getChips() + chipBet);
